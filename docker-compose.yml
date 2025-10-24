@@ -1,0 +1,12 @@
+services:
+  xampp:
+    image: tomsik68/xampp:latest
+    container_name: uc-server-2
+    privileged: true
+    ports:
+      - "8088:80"
+    volumes:
+      # - /workspaces/unicon:/opt/lampp/htdocs/unicon:Z
+      - ~/Documents/unicon:/opt/lampp/htdocs/unicon:Z
+    restart: unless-stopped
+
