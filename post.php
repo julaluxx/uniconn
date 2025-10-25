@@ -37,16 +37,17 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     <!-- Navbar -->
     <nav class="navbar bg-primary text-primary-content shadow-lg px-6">
         <div class="flex justify-between items-center w-full max-w-7xl mx-auto">
-            <!-- ซ้าย: โลโก้ -->
+            <!-- โลโก้ -->
             <div class="flex-none">
-                <a class="btn btn-ghost normal-case text-2xl font-bold tracking-wide" href="index.php">UniConnect</a>
+                <a href="index.php" class="btn btn-ghost normal-case text-2xl font-bold tracking-wide">UniConnect</a>
             </div>
 
-            <!-- กลาง: เมนู -->
+            <!-- เมนูกลาง -->
             <div class="flex-1 flex justify-center space-x-2">
+                <a href="index.php" class="btn btn-ghost hover:bg-primary-focus">หน้าแรก</a>
                 <?php if (isset($_SESSION['user_id'])): ?>
                     <a href="profile.php" class="btn btn-ghost hover:bg-primary-focus">โปรไฟล์</a>
-                    <?php if ($_SESSION['role'] == 'moderator' || $_SESSION['role'] == 'admin'): ?>
+                    <?php if (in_array($_SESSION['role'], ['moderator', 'admin'])): ?>
                         <a href="moderate.php" class="btn btn-ghost hover:bg-primary-focus">จัดการกระทู้</a>
                     <?php endif; ?>
                     <?php if ($_SESSION['role'] == 'admin'): ?>
@@ -55,7 +56,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 <?php endif; ?>
             </div>
 
-            <!-- ขวา: ปุ่มเข้าสู่ระบบ/ออกจากระบบ -->
+            <!-- ปุ่มเข้าสู่ระบบ -->
             <div class="flex-none">
                 <?php if (isset($_SESSION['user_id'])): ?>
                     <a href="logout.php" class="btn btn-secondary">ออกจากระบบ</a>

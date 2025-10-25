@@ -60,6 +60,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['edit_profile'])) {
 ?>
 <!DOCTYPE html>
 <html lang="th" data-theme="light">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -67,22 +68,23 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['edit_profile'])) {
     <link href="https://cdn.jsdelivr.net/npm/daisyui@4.12.10/dist/full.css" rel="stylesheet" type="text/css" />
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
+
 <body class="min-h-screen bg-gradient-to-br from-blue-50 via-white to-indigo-100 flex flex-col">
 
     <!-- Navbar -->
     <nav class="navbar bg-primary text-primary-content shadow-lg px-6">
         <div class="flex justify-between items-center w-full max-w-7xl mx-auto">
-            <!-- ซ้าย -->
+            <!-- โลโก้ -->
             <div class="flex-none">
-                <a class="btn btn-ghost normal-case text-2xl font-bold tracking-wide" href="index.php">
-                    UniConnect
-                </a>
+                <a href="index.php" class="btn btn-ghost normal-case text-2xl font-bold tracking-wide">UniConnect</a>
             </div>
-            <!-- กลาง -->
+
+            <!-- เมนูกลาง -->
             <div class="flex-1 flex justify-center space-x-2">
+                <a href="index.php" class="btn btn-ghost hover:bg-primary-focus">หน้าแรก</a>
                 <?php if (isset($_SESSION['user_id'])): ?>
                     <a href="profile.php" class="btn btn-ghost hover:bg-primary-focus">โปรไฟล์</a>
-                    <?php if ($_SESSION['role'] == 'moderator' || $_SESSION['role'] == 'admin'): ?>
+                    <?php if (in_array($_SESSION['role'], ['moderator', 'admin'])): ?>
                         <a href="moderate.php" class="btn btn-ghost hover:bg-primary-focus">จัดการกระทู้</a>
                     <?php endif; ?>
                     <?php if ($_SESSION['role'] == 'admin'): ?>
@@ -90,7 +92,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['edit_profile'])) {
                     <?php endif; ?>
                 <?php endif; ?>
             </div>
-            <!-- ขวา -->
+
+            <!-- ปุ่มเข้าสู่ระบบ -->
             <div class="flex-none">
                 <?php if (isset($_SESSION['user_id'])): ?>
                     <a href="logout.php" class="btn btn-secondary">ออกจากระบบ</a>
@@ -105,26 +108,30 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['edit_profile'])) {
     <main class="flex-grow container mx-auto px-6 py-8 max-w-5xl">
         <div class="card bg-base-100 shadow-2xl p-6 mb-8 transition-all hover:shadow-3xl">
             <div class="card-body">
-                <h2 class="card-title text-2xl font-bold text-primary mb-4">👤 โปรไฟล์ของ <?php echo htmlspecialchars($user['username']); ?></h2>
+                <h2 class="card-title text-2xl font-bold text-primary mb-4">👤 โปรไฟล์ของ
+                    <?php echo htmlspecialchars($user['username']); ?></h2>
 
                 <?php if (isset($message)): ?>
-                    <div class="alert <?php echo strpos($message, 'ข้อผิดพลาด') === false ? 'alert-success' : 'alert-error'; ?> mb-4">
+                    <div
+                        class="alert <?php echo strpos($message, 'ข้อผิดพลาด') === false ? 'alert-success' : 'alert-error'; ?> mb-4">
                         <span><?php echo htmlspecialchars($message); ?></span>
                     </div>
                 <?php endif; ?>
 
                 <div class="flex flex-col md:flex-row items-center gap-6">
-                    <img src="<?php echo htmlspecialchars($user['profile_pic'] ?? 'default.jpg'); ?>" class="w-32 h-32 rounded-full border-4 border-primary/20 shadow" />
+                    <img src="<?php echo htmlspecialchars($user['profile_pic'] ?? 'default.jpg'); ?>"
+                        class="w-32 h-32 rounded-full border-4 border-primary/20 shadow" />
                     <div>
                         <p><strong>ชื่อผู้ใช้:</strong> <?php echo htmlspecialchars($user['username']); ?></p>
                         <p><strong>อีเมล:</strong> <?php echo htmlspecialchars($user['email']); ?></p>
-                        <p><strong>บทบาท:</strong> 
+                        <p><strong>บทบาท:</strong>
                             <?php echo htmlspecialchars($user['role'] == 'admin' ? 'ผู้ดูแลระบบ' : ($user['role'] == 'moderator' ? 'ผู้ดูแล' : 'สมาชิก')); ?>
                         </p>
                     </div>
                 </div>
 
-                <button class="btn btn-primary mt-6" onclick="document.getElementById('edit_profile_modal').showModal()">
+                <button class="btn btn-primary mt-6"
+                    onclick="document.getElementById('edit_profile_modal').showModal()">
                     ✏️ แก้ไขโปรไฟล์
                 </button>
             </div>
@@ -137,14 +144,17 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['edit_profile'])) {
                 <form method="POST" enctype="multipart/form-data" class="space-y-3">
                     <div class="form-control">
                         <label class="label"><span class="label-text">ชื่อผู้ใช้</span></label>
-                        <input type="text" name="username" value="<?php echo htmlspecialchars($user['username']); ?>" class="input input-bordered" required />
+                        <input type="text" name="username" value="<?php echo htmlspecialchars($user['username']); ?>"
+                            class="input input-bordered" required />
                     </div>
                     <div class="form-control">
                         <label class="label"><span class="label-text">อีเมล</span></label>
-                        <input type="email" name="email" value="<?php echo htmlspecialchars($user['email']); ?>" class="input input-bordered" required />
+                        <input type="email" name="email" value="<?php echo htmlspecialchars($user['email']); ?>"
+                            class="input input-bordered" required />
                     </div>
                     <div class="form-control">
-                        <label class="label"><span class="label-text">รหัสผ่านใหม่ (เว้นว่างหากไม่เปลี่ยน)</span></label>
+                        <label class="label"><span class="label-text">รหัสผ่านใหม่
+                                (เว้นว่างหากไม่เปลี่ยน)</span></label>
                         <input type="password" name="password" class="input input-bordered" />
                     </div>
                     <div class="form-control">
@@ -153,7 +163,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['edit_profile'])) {
                     </div>
                     <div class="modal-action">
                         <button type="submit" name="edit_profile" class="btn btn-primary">บันทึก</button>
-                        <button type="button" class="btn" onclick="document.getElementById('edit_profile_modal').close()">ยกเลิก</button>
+                        <button type="button" class="btn"
+                            onclick="document.getElementById('edit_profile_modal').close()">ยกเลิก</button>
                     </div>
                 </form>
             </div>
@@ -174,11 +185,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['edit_profile'])) {
                                 </a>
                             </h4>
                             <p class="text-sm text-gray-500">
-                                หมวด: <?php echo htmlspecialchars($post['category_name']); ?> • 
-                                วันที่: <?php echo date('d/m/Y H:i', strtotime($post['created_at'])); ?> • 
+                                หมวด: <?php echo htmlspecialchars($post['category_name']); ?> •
+                                วันที่: <?php echo date('d/m/Y H:i', strtotime($post['created_at'])); ?> •
                                 ดู: <?php echo $post['views']; ?>
                             </p>
-                            <p class="text-gray-700 mt-1"><?php echo htmlspecialchars(substr($post['content'], 0, 120)) . '...'; ?></p>
+                            <p class="text-gray-700 mt-1">
+                                <?php echo htmlspecialchars(substr($post['content'], 0, 120)) . '...'; ?></p>
                         </div>
                     <?php endforeach; ?>
                 </div>
@@ -199,8 +211,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['edit_profile'])) {
                                     <?php echo htmlspecialchars($comment['post_title']); ?>
                                 </a>
                             </p>
-                            <p class="text-gray-700 mt-1"><?php echo htmlspecialchars(substr($comment['content'], 0, 120)) . '...'; ?></p>
-                            <p class="text-sm text-gray-500">วันที่: <?php echo date('d/m/Y H:i', strtotime($comment['created_at'])); ?></p>
+                            <p class="text-gray-700 mt-1">
+                                <?php echo htmlspecialchars(substr($comment['content'], 0, 120)) . '...'; ?></p>
+                            <p class="text-sm text-gray-500">วันที่:
+                                <?php echo date('d/m/Y H:i', strtotime($comment['created_at'])); ?></p>
                         </div>
                     <?php endforeach; ?>
                 </div>
@@ -213,4 +227,5 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['edit_profile'])) {
         <p class="text-sm text-gray-600">© 2025 UniConnect — สังคมนักศึกษาออนไลน์</p>
     </footer>
 </body>
+
 </html>
