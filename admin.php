@@ -72,7 +72,7 @@ if (isset($_POST['delete_user'])) {
                 <a href="index.php" class="btn btn-ghost hover:bg-primary-focus">หน้าแรก</a>
                 <a href="profile.php" class="btn btn-ghost hover:bg-primary-focus">โปรไฟล์</a>
                 <a href="moderate.php" class="btn btn-ghost hover:bg-primary-focus">จัดการกระทู้</a>
-                <a href="admin.php" class="btn btn-ghost hover:bg-primary-focus active">จัดการผู้ใช้</a>
+                <a href="admin.php" class="btn btn-success hover:bg-primary-focus active">จัดการผู้ใช้</a>
             </div>
             <div class="flex-none">
                 <a href="logout.php" class="btn btn-secondary">ออกจากระบบ</a>

@@ -47,7 +47,8 @@ $posts = $stmt->fetchAll();
     <meta charset="UTF-8">
     <title>UniConnect - หน้าหลัก</title>
     <link href="https://cdn.jsdelivr.net/npm/daisyui@4.12.10/dist/full.css" rel="stylesheet" />
-    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.tailwindcss.com">
+    </script>
 </head>
 
 <body class="min-h-screen bg-gradient-to-br from-blue-50 via-white to-indigo-100 flex flex-col">
@@ -62,7 +63,7 @@ $posts = $stmt->fetchAll();
 
             <!-- เมนูกลาง -->
             <div class="flex-1 flex justify-center space-x-2">
-                <a href="index.php" class="btn btn-ghost hover:bg-primary-focus">หน้าแรก</a>
+                <a href="index.php" class="btn btn-success hover:bg-primary-focus active">หน้าแรก</a>
                 <?php if (isset($_SESSION['user_id'])): ?>
                     <a href="profile.php" class="btn btn-ghost hover:bg-primary-focus">โปรไฟล์</a>
                     <?php if (in_array($_SESSION['role'], ['moderator', 'admin'])): ?>
@@ -85,24 +86,30 @@ $posts = $stmt->fetchAll();
         </div>
     </nav>
 
-    <!-- 🔍 ส่วนค้นหา + ปุ่มสร้างกระทู้ -->
+    <!-- ส่วนค้นหา + ปุ่มสร้างกระทู้ -->
     <div class="bg-base-200 p-4 flex flex-wrap justify-between items-center gap-4">
-        <form action="index.php" method="GET" class="flex-grow">
+
+        <form action="index.php" method="GET" class="flex-grow flex gap-2">
             <input type="text" name="search" placeholder="🔍 ค้นหากระทู้..."
                 class="input input-bordered w-full focus:ring focus:ring-primary/30"
                 value="<?php echo htmlspecialchars($search); ?>" />
+            <?php if ($search || $category_filter): ?>
+                <a href="index.php" class="btn btn-outline btn-secondary">ล้างการค้นหา</a>
+            <?php endif; ?>
         </form>
+
         <?php if (isset($_SESSION['user_id'])): ?>
             <a href="post.php" class="btn btn-primary flex items-center gap-2">
                 ✏️ สร้างกระทู้ใหม่
             </a>
         <?php endif; ?>
+
     </div>
 
-    <!-- 🧭 Layout หลัก -->
+    <!-- Layout หลัก -->
     <main class="flex-grow container mx-auto max-w-7xl p-6 flex flex-col md:flex-row gap-6">
 
-        <!-- 🎭 Sidebar -->
+        <!-- Sidebar -->
         <aside class="md:w-1/4 space-y-4">
 
             <!-- โปรไฟล์ -->
@@ -152,10 +159,24 @@ $posts = $stmt->fetchAll();
 
         </aside>
 
-        <!-- 📄 ส่วนกลาง -->
+        <!-- ส่วนกลาง -->
         <section class="flex-1">
-            <h2 class="text-2xl font-bold mb-4 text-primary">กระทู้ล่าสุด</h2>
+            <!-- แสดงผลการค้นหา -->
+            <h2 class="text-2xl font-bold mb-4 text-primary">
+                <?php
+                if ($search && $category_filter) {
+                    echo "ผลลัพธ์การค้นหา \"" . htmlspecialchars($search) . "\" ในหมวดหมู่ " . htmlspecialchars($categories[array_search($category_filter, array_column($categories, 'id'))]['name']);
+                } elseif ($search) {
+                    echo "ผลลัพธ์การค้นหา \"" . htmlspecialchars($search) . "\"";
+                } elseif ($category_filter) {
+                    echo "กระทู้หมวดหมู่: " . htmlspecialchars($categories[array_search($category_filter, array_column($categories, 'id'))]['name']);
+                } else {
+                    echo "กระทู้ล่าสุด";
+                }
+                ?>
+            </h2>
 
+            <!-- แสดงกระทู้ทั้งหมด -->
             <?php if (empty($posts)): ?>
                 <div class="alert alert-info shadow-lg">
                     <span>ไม่พบกระทู้ที่ตรงกับเงื่อนไข</span>
@@ -188,7 +209,7 @@ $posts = $stmt->fetchAll();
         </section>
     </main>
 
-    <!-- 🦶 Footer -->
+    <!-- Footer -->
     <footer class="footer footer-center bg-base-200 text-base-content py-4 border-t border-base-300">
         <p class="text-sm text-gray-600">© 2025 UniConnect — สังคมนักศึกษาออนไลน์</p>
     </footer>

@@ -90,7 +90,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <?php if (isset($_SESSION['user_id'])): ?>
                     <a href="profile.php" class="btn btn-ghost hover:bg-primary-focus">โปรไฟล์</a>
                     <?php if (in_array($_SESSION['role'], ['moderator', 'admin'])): ?>
-                        <a href="moderate.php" class="btn btn-ghost hover:bg-primary-focus">จัดการกระทู้</a>
+                        <a href="moderate.php" class="btn btn-success hover:bg-primary-focus">จัดการกระทู้</a>
                     <?php endif; ?>
                     <?php if ($_SESSION['role'] == 'admin'): ?>
                         <a href="admin.php" class="btn btn-ghost hover:bg-primary-focus">จัดการผู้ใช้</a>

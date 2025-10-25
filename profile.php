@@ -83,7 +83,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['edit_profile'])) {
             <div class="flex-1 flex justify-center space-x-2">
                 <a href="index.php" class="btn btn-ghost hover:bg-primary-focus">หน้าแรก</a>
                 <?php if (isset($_SESSION['user_id'])): ?>
-                    <a href="profile.php" class="btn btn-ghost hover:bg-primary-focus">โปรไฟล์</a>
+                    <a href="profile.php" class="btn btn-success hover:bg-primary-focus">โปรไฟล์</a>
                     <?php if (in_array($_SESSION['role'], ['moderator', 'admin'])): ?>
                         <a href="moderate.php" class="btn btn-ghost hover:bg-primary-focus">จัดการกระทู้</a>
                     <?php endif; ?>
