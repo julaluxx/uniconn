@@ -37,7 +37,7 @@ $posts = $stmt->fetchAll();
 ?>
 
 <!DOCTYPE html>
-<html lang="th" data-theme="dark">
+<html lang="th" data-theme="light">
 
 <head>
     <meta charset="UTF-8">
@@ -57,7 +57,7 @@ $posts = $stmt->fetchAll();
                 <div class="dropdown dropdown-end">
                     <label tabindex="0" class="btn btn-ghost btn-circle avatar">
                         <div class="w-10 rounded-full">
-                            <img src="<?php echo $_SESSION['profile_pic'] ?? 'default.jpg'; ?>" />
+                            <img src="<?php echo $_SESSION['profile_pic'] ?? '/assets/default.png'; ?>" />
                         </div>
                     </label>
                     <ul tabindex="0"
@@ -93,18 +93,15 @@ $posts = $stmt->fetchAll();
         </div>
     </div>
 
+    <!-- เนื้อหาหลัก -->
     <div class="flex">
         <!-- เมนูซ้าย -->
         <div class="w-1/4 p-4">
+
             <!-- โปรไฟล์ -->
-            <div class="card bg-base-200 w-full rounded-box mb-4">
+            <div class="card bg-base-200 w-full rounded-box mb-4 text-center">
                 <?php if ($user): ?>
                     <div class="card-body flex items-center space-x-4 p-4">
-                        <div class="avatar">
-                            <div class="w-16 rounded-full">
-                                <img src="<?php echo $user['profile_pic'] ?? 'default.jpg'; ?>" />
-                            </div>
-                        </div>
                         <div class="">
                             <h3 class="text-lg font-bold"><?php echo htmlspecialchars($user['username']); ?></h3>
                             <p class="text-sm"><?php echo htmlspecialchars($user['email']); ?></p>
@@ -124,6 +121,14 @@ $posts = $stmt->fetchAll();
                     <li><a href="index.php?category=<?php echo $cat['id']; ?>"><?php echo $cat['name']; ?></a></li>
                 <?php endforeach; ?>
             </ul>
+
+            <!-- สถิติ -->
+             <ul class="menu bg-base-200 w-full rounded-box">
+                    <?php 
+                    // display statistic of this website
+                    ?>
+             </ul>
+
         </div>
 
         <!-- ส่วนกลาง: กระทู้ -->
@@ -146,6 +151,7 @@ $posts = $stmt->fetchAll();
         </div>
     </div>
 
+    <!-- footer -->
     <footer class="footer p-10 bg-neutral text-neutral-content">
         <div>© UniConnect 2025 - All rights reserved</div>
     </footer>

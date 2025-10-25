@@ -25,18 +25,23 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $email = $_POST['email'];
     $password = !empty($_POST['password']) ? password_hash($_POST['password'], PASSWORD_BCRYPT) : $user['password'];
 
+    // จัดการการอัปโหลดรูปโปรไฟล์
     $profile_pic = $user['profile_pic'];
-    if (isset($_FILES['profile_pic']) && $_FILES['profile_pic']['error'] == 0) {
+    if (isset($_FILES['profile_pic']) && $_FILES['profile_pic']['error'] == UPLOAD_ERR_OK) {
         $profile_pic = uploadImage($_FILES['profile_pic']);
     }
 
+    // อัปเดตข้อมูลผู้ใช้ในฐานข้อมูล
     $stmt = $pdo->prepare("UPDATE users SET username = ?, email = ?, password = ?, profile_pic = ? WHERE id = ?");
     $stmt->execute([$username, $email, $password, $profile_pic, $user_id]);
 
+    // อัปเดต session เพื่อให้รูปโปรไฟล์ใหม่แสดงทันที
     $_SESSION['profile_pic'] = $profile_pic;
-    header('Location: profile.php');
-    exit;
+
+    // แสดงข้อความแจ้งเตือนว่าบันทึกสำเร็จ
+    $message = "บันทึกข้อมูลโปรไฟล์เรียบร้อยแล้ว";
 }
+
 ?>
 
 <!DOCTYPE html>
@@ -50,16 +55,21 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 <body class="bg-base-100 p-4">
     <div class="card bg-base-100 shadow-xl">
         <div class="card-body">
-            <h2 class="card-title">โปรไฟล์ของ <?php echo $user['username']; ?></h2>
-            <img src="<?php echo $user['profile_pic']; ?>" class="w-32 h-32 rounded-full" />
+            <h2 class="card-title">โปรไฟล์ของ <?php echo htmlspecialchars($user['username']); ?></h2>
+            <?php if (isset($message)): ?>
+                <div class="alert alert-success">
+                    <span><?php echo htmlspecialchars($message); ?></span>
+                </div>
+            <?php endif; ?>
+            <img src="<?php echo htmlspecialchars($user['profile_pic'] ?? 'default.jpg'); ?>" class="w-32 h-32 rounded-full" />
             <form method="POST" enctype="multipart/form-data">
                 <div class="form-control">
                     <label class="label"><span class="label-text">ชื่อผู้ใช้</span></label>
-                    <input type="text" name="username" value="<?php echo $user['username']; ?>" class="input input-bordered" required />
+                    <input type="text" name="username" value="<?php echo htmlspecialchars($user['username']); ?>" class="input input-bordered" required />
                 </div>
                 <div class="form-control">
                     <label class="label"><span class="label-text">อีเมล</span></label>
-                    <input type="email" name="email" value="<?php echo $user['email']; ?>" class="input input-bordered" required />
+                    <input type="email" name="email" value="<?php echo htmlspecialchars($user['email']); ?>" class="input input-bordered" required />
                 </div>
                 <div class="form-control">
                     <label class="label"><span class="label-text">รหัสผ่านใหม่ (เว้นว่างหากไม่เปลี่ยน)</span></label>
@@ -67,7 +77,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 </div>
                 <div class="form-control">
                     <label class="label"><span class="label-text">รูปโปรไฟล์</span></label>
-                    <input type="file" name="profile_pic" class="file-input file-input-bordered" />
+                    <input type="file" name="profile_pic" class="file-input file-input-bordered" accept="image/*" />
                 </div>
                 <div class="form-control mt-6">
                     <button class="btn btn-primary" type="submit">บันทึก</button>
@@ -80,7 +90,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     <?php foreach ($posts as $post): ?>
         <div class="card bg-base-100 shadow mb-2">
             <div class="card-body">
-                <a href="view_post.php?id=<?php echo $post['id']; ?>"><?php echo $post['title']; ?></a>
+                <a href="view_post.php?id=<?php echo $post['id']; ?>"><?php echo htmlspecialchars($post['title']); ?></a>
                 <p>วันที่: <?php echo $post['created_at']; ?></p>
             </div>
         </div>
