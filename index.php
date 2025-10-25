@@ -145,6 +145,9 @@ $posts = $stmt->fetchAll();
                 <p>โพสต์ทั้งหมด:
                     <?php echo $pdo->query("SELECT COUNT(*) FROM posts")->fetchColumn(); ?>
                 </p>
+                <p>คอมเม้นทั้งหมด:
+                    <?php echo $pdo->query("SELECT COUNT(*) FROM comments")->fetchColumn(); ?>
+                </p>
             </div>
 
         </aside>
