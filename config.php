@@ -11,13 +11,36 @@ try {
     die("การเชื่อมต่อฐานข้อมูลล้มเหลว: " . $e->getMessage());
 }
 
-// ฟังก์ชันช่วยเหลือ (เช่น upload รูป)
+// ฟังก์ชันช่วยเหลือสำหรับอัปโหลดรูป
 function uploadImage($file) {
     $target_dir = "uploads/";
-    $target_file = $target_dir . basename($file["name"]);
-    if (move_uploaded_file($file["tmp_name"], $target_file)) {
+    // ตรวจสอบว่าโฟลเดอร์ uploads มีอยู่หรือไม่
+    if (!is_dir($target_dir)) {
+        mkdir($target_dir, 0755, true);
+    }
+
+    $allowed_types = ['image/jpeg', 'image/png', 'image/gif'];
+    $max_size = 2 * 1024 * 1024; // 2MB
+
+    // ตรวจสอบประเภทไฟล์
+    if (!in_array($file['type'], $allowed_types)) {
+        return false; // หรือสามารถ throw Exception ได้
+    }
+
+    // ตรวจสอบขนาดไฟล์
+    if ($file['size'] > $max_size) {
+        return false;
+    }
+
+    // สร้างชื่อไฟล์ที่ไม่ซ้ำ
+    $extension = pathinfo($file['name'], PATHINFO_EXTENSION);
+    $unique_name = uniqid('img_', true) . '.' . $extension;
+    $target_file = $target_dir . $unique_name;
+
+    // ย้ายไฟล์
+    if (move_uploaded_file($file['tmp_name'], $target_file)) {
         return $target_file;
     }
-    return null;
+    return false;
 }
 ?>

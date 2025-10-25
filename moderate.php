@@ -108,7 +108,39 @@ if (isset($_POST['delete_category'])) {
     <link href="https://cdn.jsdelivr.net/npm/daisyui@latest/dist/full.css" rel="stylesheet" type="text/css" />
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@latest/dist/tailwind.min.css" rel="stylesheet" type="text/css" />
 </head>
-<body class="bg-base-100 p-4">
+<body class="bg-base-100">
+    <!-- เมนูนำทาง -->
+    <div class="navbar bg-primary text-primary-content">
+        <div class="flex-1">
+            <a class="btn btn-ghost text-xl" href="index.php">UniConnect</a>
+        </div>
+        <div class="flex-none gap-2">
+            <?php if (isset($_SESSION['user_id'])): ?>
+                <div class="dropdown dropdown-end">
+                    <label tabindex="0" class="btn btn-ghost btn-circle avatar">
+                        <div class="w-10 rounded-full">
+                            <img src="<?php echo $_SESSION['profile_pic'] ?? '/assets/default.png'; ?>" />
+                        </div>
+                    </label>
+                    <ul tabindex="0"
+                        class="mt-3 z-[1] p-2 shadow menu menu-sm dropdown-content bg-base-100 rounded-box w-52">
+                        <li><a href="profile.php">โปรไฟล์</a></li>
+                        <?php if ($_SESSION['role'] == 'moderator' || $_SESSION['role'] == 'admin'): ?>
+                            <li><a href="moderate.php">จัดการกระทู้</a></li>
+                        <?php endif; ?>
+                        <?php if ($_SESSION['role'] == 'admin'): ?>
+                            <li><a href="admin.php">จัดการผู้ใช้</a></li>
+                        <?php endif; ?>
+                        <li><a href="logout.php">ออกจากระบบ</a></li>
+                    </ul>
+                </div>
+            <?php else: ?>
+                <a href="login.php" class="btn btn-secondary">เข้าสู่ระบบ</a>
+            <?php endif; ?>
+        </div>
+    </div>
+
+    <div class="container p-4">
     <!-- รายงาน -->
     <h2 class="text-2xl font-bold mb-4">คิวรายงาน</h2>
     <?php if (isset($error)): ?>
@@ -309,6 +341,7 @@ if (isset($_POST['delete_category'])) {
                 <?php endforeach; ?>
             </tbody>
         </table>
+    </div>
     </div>
 
 </body>

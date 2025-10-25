@@ -38,40 +38,35 @@ $posts = $stmt->fetchAll();
 
 <!DOCTYPE html>
 <html lang="th" data-theme="light">
-
 <head>
     <meta charset="UTF-8">
     <title>UniConnect</title>
     <link href="https://cdn.jsdelivr.net/npm/daisyui@latest/dist/full.css" rel="stylesheet" type="text/css" />
-    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@latest/dist/tailwind.min.css" rel="stylesheet"
-        type="text/css" />
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@latest/dist/tailwind.min.css" rel="stylesheet" type="text/css" />
 </head>
-
 <body class="bg-base-100">
+    <!-- เมนูนำทาง -->
     <div class="navbar bg-primary text-primary-content">
-        <div class="flex-1">
+        <!-- ส่วนซ้าย: โลโก้ -->
+        <div class="flex-none">
             <a class="btn btn-ghost text-xl" href="index.php">UniConnect</a>
         </div>
-        <div class="flex-none gap-2">
+        <!-- ส่วนกลาง: เมนู -->
+        <div class="flex-1 justify-center gap-2">
             <?php if (isset($_SESSION['user_id'])): ?>
-                <div class="dropdown dropdown-end">
-                    <label tabindex="0" class="btn btn-ghost btn-circle avatar">
-                        <div class="w-10 rounded-full">
-                            <img src="<?php echo $_SESSION['profile_pic'] ?? '/assets/default.png'; ?>" />
-                        </div>
-                    </label>
-                    <ul tabindex="0"
-                        class="mt-3 z-[1] p-2 shadow menu menu-sm dropdown-content bg-base-100 rounded-box w-52">
-                        <li><a href="profile.php">โปรไฟล์</a></li>
-                        <?php if ($_SESSION['role'] == 'moderator' || $_SESSION['role'] == 'admin'): ?>
-                            <li><a href="moderate.php">จัดการกระทู้</a></li>
-                        <?php endif; ?>
-                        <?php if ($_SESSION['role'] == 'admin'): ?>
-                            <li><a href="admin.php">จัดการผู้ใช้</a></li>
-                        <?php endif; ?>
-                        <li><a href="logout.php">ออกจากระบบ</a></li>
-                    </ul>
-                </div>
+                <a href="profile.php" class="btn btn-ghost">โปรไฟล์</a>
+                <?php if ($_SESSION['role'] == 'moderator' || $_SESSION['role'] == 'admin'): ?>
+                    <a href="moderate.php" class="btn btn-ghost">จัดการกระทู้</a>
+                <?php endif; ?>
+                <?php if ($_SESSION['role'] == 'admin'): ?>
+                    <a href="admin.php" class="btn btn-ghost">จัดการผู้ใช้</a>
+                <?php endif; ?>
+            <?php endif; ?>
+        </div>
+        <!-- ส่วนขวา: เข้าสู่ระบบ/ออกจากระบบ -->
+        <div class="flex-none">
+            <?php if (isset($_SESSION['user_id'])): ?>
+                <a href="logout.php" class="btn btn-secondary">ออกจากระบบ</a>
             <?php else: ?>
                 <a href="login.php" class="btn btn-secondary">เข้าสู่ระบบ</a>
             <?php endif; ?>
@@ -97,12 +92,11 @@ $posts = $stmt->fetchAll();
     <div class="flex">
         <!-- เมนูซ้าย -->
         <div class="w-1/4 p-4">
-
             <!-- โปรไฟล์ -->
             <div class="card bg-base-200 w-full rounded-box mb-4 text-center">
                 <?php if ($user): ?>
                     <div class="card-body flex items-center space-x-4 p-4">
-                        <div class="">
+                        <div>
                             <h3 class="text-lg font-bold"><?php echo htmlspecialchars($user['username']); ?></h3>
                             <p class="text-sm"><?php echo htmlspecialchars($user['email']); ?></p>
                         </div>
@@ -118,17 +112,16 @@ $posts = $stmt->fetchAll();
             <!-- หมวดหมู่ -->
             <ul class="menu bg-base-200 w-full rounded-box">
                 <?php foreach ($categories as $cat): ?>
-                    <li><a href="index.php?category=<?php echo $cat['id']; ?>"><?php echo $cat['name']; ?></a></li>
+                    <li><a href="index.php?category=<?php echo $cat['id']; ?>"><?php echo htmlspecialchars($cat['name']); ?></a></li>
                 <?php endforeach; ?>
             </ul>
 
             <!-- สถิติ -->
-             <ul class="menu bg-base-200 w-full rounded-box">
-                    <?php 
-                    // display statistic of this website
-                    ?>
-             </ul>
-
+            <ul class="menu bg-base-200 w-full rounded-box">
+                <?php
+                // display statistic of this website
+                ?>
+            </ul>
         </div>
 
         <!-- ส่วนกลาง: กระทู้ -->
@@ -137,14 +130,14 @@ $posts = $stmt->fetchAll();
             <?php foreach ($posts as $post): ?>
                 <div class="card bg-base-100 shadow-xl mb-4">
                     <div class="card-body">
-                        <h2 class="card-title"><a
-                                href="view_post.php?id=<?php echo $post['id']; ?>"><?php echo $post['title']; ?></a>
+                        <h2 class="card-title">
+                            <a href="view_post.php?id=<?php echo $post['id']; ?>"><?php echo htmlspecialchars($post['title']); ?></a>
                             <?php if ($post['pinned']): ?><span class="badge badge-primary">ปักหมุด</span><?php endif; ?>
                         </h2>
-                        <p>โดย: <?php echo $post['username']; ?> | หมวด: <?php echo $post['category']; ?> | วันที่:
-                            <?php echo $post['created_at']; ?> | ดู: <?php echo $post['views']; ?>
+                        <p>โดย: <?php echo htmlspecialchars($post['username']); ?> | หมวด: <?php echo htmlspecialchars($post['category']); ?> | วันที่:
+                            <?php echo date('d/m/Y H:i', strtotime($post['created_at'])); ?> | ดู: <?php echo $post['views']; ?>
                         </p>
-                        <p><?php echo substr($post['content'], 0, 100) . '...'; ?></p>
+                        <p><?php echo htmlspecialchars(substr($post['content'], 0, 100)) . '...'; ?></p>
                     </div>
                 </div>
             <?php endforeach; ?>
@@ -161,11 +154,10 @@ $posts = $stmt->fetchAll();
         <script>
             setInterval(function () {
                 fetch('notifications.php').then(response => response.text()).then(data => {
-                    if (data) alert(data);  // แสดงแจ้งเตือน
+                    if (data) alert(data); // แสดงแจ้งเตือน
                 });
             }, 10000);
         </script>
     <?php endif; ?>
 </body>
-
 </html>
