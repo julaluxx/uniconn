@@ -134,6 +134,8 @@ if (isset($_SESSION['role']) && in_array($_SESSION['role'], ['moderator', 'admin
 
     <!-- Main Content -->
     <main class="flex-grow container mx-auto px-6 py-8 max-w-4xl">
+        <!-- ปุ่มย้อนกลับ -->
+        <button onclick="window.location.href='index.php'" class="btn btn-ghost mb-4">← ย้อนกลับ</button>
         <!-- โพสต์ -->
         <div class="card bg-base-100 shadow-2xl p-6 mb-6">
             <div class="card-body">

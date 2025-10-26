@@ -6,6 +6,6 @@ services:
     ports:
       - "8088:80"
     volumes:
-      - /workspaces/UniConn:/opt/lampp/htdocs/uniconn:Z
-      # - ~/Documents/uniconn:/opt/lampp/htdocs/uniconn:Z
+      # - /workspaces/UniConn:/opt/lampp/htdocs/uniconn:Z
+      - ~/Documents/uniconn:/opt/lampp/htdocs/uniconn:Z
     restart: unless-stopped
